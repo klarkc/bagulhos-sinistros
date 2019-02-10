@@ -3,11 +3,25 @@ const { defineFeature, loadFeature } = require('jest-cucumber');
 const feature = loadFeature('./features/serie_interativa_bagulhos_sinistros.feature');
 const getClient = () => ({});
 const getEpisode = () => ({});
+const getPlayer = (client) => {
+    let time = 0;
+
+    return {
+        play: () => {},
+        setTime: (sec) => {
+            time = sec;
+            if (client.question.time === time)
+                client.screenQuestion = client.question;
+        },
+        getStatus: () => 'pause',
+    };
+};
 
 defineFeature(feature, test => {
     
     test('Recebe uma pergunta', ({ given, when, then, pending }) => {
         const client = getClient();
+        const player = getPlayer(client);
         
         given('que o cliente recebeu uma pergunta no episódio', () => {
             client.question = {
